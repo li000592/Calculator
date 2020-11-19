@@ -4,19 +4,26 @@ import "./Calculator.css";
 function Calculator() {
   const [displayNumber, setDisplayNumber] = React.useState(0);
   const [wasClickedOrder, setWasClickedOrder] = React.useState([""]);
+
   React.useEffect(() => {
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
     const finalNumber = wasClickedOrder.reduce(reducer);
     console.log(wasClickedOrder.length);
     setDisplayNumber(finalNumber);
+    console.log("wasClickedOrder===>", wasClickedOrder);
   }, [wasClickedOrder]);
   const clickKeyboard = (ev) => {
     const clickedNumber = ev.target.innerText;
     console.log(clickedNumber);
-    const keyboardNumber = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    //const keyboardNumber = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,.];
+    if (clickedNumber === "X") {
+      setWasClickedOrder((currentArray) => {
+        return currentArray.slice(0, currentArray.length - 1);
+      });
+    } else {
+      setWasClickedOrder((currentArray) => currentArray.concat(clickedNumber));
+    }
 
-    setWasClickedOrder((currentArray) => currentArray.concat(clickedNumber));
-    console.log(wasClickedOrder);
     console.log(displayNumber);
   };
   return (
