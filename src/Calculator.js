@@ -2,11 +2,12 @@ import React from "react";
 import "./Calculator.css";
 
 function Calculator() {
-  const [displayNumber, setDisplayNumber] = React.useState(0);
+  const [displayNumber, setDisplayNumber] = React.useState("0");
   const [wasClickedOrder, setWasClickedOrder] = React.useState([]);
 
   React.useEffect(() => {
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
+    console.log("??", wasClickedOrder);
     if (wasClickedOrder.length > 0) {
       const finalNumber = wasClickedOrder.reduce(reducer);
       setDisplayNumber(finalNumber);
@@ -19,26 +20,39 @@ function Calculator() {
 
   const clickKeyboard = (ev) => {
     const clickedKeyboard = ev.target.innerText;
+    console.log("!!!", wasClickedOrder);
     if (clickedKeyboard.length > 1)
-      return console.warn("Illegal interaction: muti number coming");
+      console.warn("Illegal interaction: muti number coming");
 
     if (clickedKeyboard === "X") {
-      setWasClickedOrder((currentArray) => {
+      return setWasClickedOrder((currentArray) => {
         return currentArray.slice(0, currentArray.length - 1);
       });
-    } else {
-      if (
-        wasClickedOrder.includes(".") &&
-        wasClickedOrder.length - wasClickedOrder.indexOf(".") > 2
-      ) {
-        console.log("Two digits after the decimal point are not counted :(");
-        return;
-      } else {
-        setWasClickedOrder((currentArray) =>
-          currentArray.concat(clickedKeyboard)
+    }
+
+    if (wasClickedOrder.length === 0) {
+      console.log("now is 0?", wasClickedOrder);
+
+      if (clickedKeyboard === ".") {
+        console.log("0" + clickedKeyboard);
+        return setWasClickedOrder(["0", clickedKeyboard]);
+      }
+      return setWasClickedOrder([clickedKeyboard]);
+    }
+
+    if (wasClickedOrder.includes(".")) {
+      if (wasClickedOrder.length - wasClickedOrder.indexOf(".") > 2) {
+        return console.warn(
+          "Two digits after the decimal point are not counted :("
         );
       }
+
+      if (clickedKeyboard === ".") {
+        return console.warn("it hasnt two dots in at the same time :(");
+      }
     }
+
+    setWasClickedOrder((currentArray) => currentArray.concat(clickedKeyboard));
   };
   return (
     <div className="numberKeyboard">
